@@ -23,11 +23,11 @@
 #'   outcome_variable = c(cyl, mpg)
 #' )
 #' 
-#' # A tibble: 2 × 6
-#' # variable     n  mean    sd ci_lower ci_upper
-#' # <chr>    <int> <dbl> <dbl>    <dbl>    <dbl>
-#' # 1 cyl         32  6.19  1.79     5.54     6.83
-#' # 2 mpg         32 20.1   6.03    17.9     22.3
+#' # A tibble: 2 × 7
+#' # variable level     n  mean    sd ci_lower ci_upper
+#' # <chr>    <lgl> <int> <dbl> <dbl>    <dbl>    <dbl>
+#' # 1 cyl      NA       32  6.19  1.79     5.54     6.83
+#' # 2 mpg      NA       32 20.1   6.03    17.9     22.3 
 #' 
 #' # Get descriptive stats for non-numeric vector
 #' get_descriptives(
@@ -50,16 +50,16 @@
 #'    outcome_variable = c(mpg, disp),
 #'    grouping_variable = cyl
 #' )
-#' 
-#' # A tibble: 6 × 7
-#' # variable cyl       n  mean    sd ci_lower ci_upper
-#' # <chr>    <fct> <int> <dbl> <dbl>    <dbl>    <dbl>
-#' # 1 mpg      4        11  26.7  4.51     23.6     29.7
-#' # 2 mpg      6         7  19.7  1.45     18.4     21.1
-#' # 3 mpg      8        14  15.1  2.56     13.6     16.6
-#' # 4 disp     4        11 105.  26.9      87.1    123. 
-#' # 5 disp     6         7 183.  41.6     145.     222. 
-#' # 6 disp     8        14 353.  67.8     314.     392.
+#'
+#' # A tibble: 6 × 8
+#' # variable level cyl       n  mean    sd ci_lower ci_upper
+#' # <chr>    <lgl> <fct> <int> <dbl> <dbl>    <dbl>    <dbl>
+#' # 1 mpg      NA    4        11  26.7  4.51     23.6     29.7
+#' # 2 mpg      NA    6         7  19.7  1.45     18.4     21.1
+#' # 3 mpg      NA    8        14  15.1  2.56     13.6     16.6
+#' # 4 disp     NA    4        11 105.  26.9      87.1    123. 
+#' # 5 disp     NA    6         7 183.  41.6     145.     222. 
+#' # 6 disp     NA    8        14 353.  67.8     314.     392.
 #' 
 #' # Set seed for reproducibility
 #' set.seed(123)
@@ -80,11 +80,15 @@
 #'   grouping_variable = group
 #' )
 #' 
-#' # A tibble: 2 × 7
-#' # variable group       n  mean    sd ci_lower ci_upper
-#' # <chr>    <chr>   <int> <dbl> <dbl>    <dbl>    <dbl>
-#' # 1 cyl      Group 1    15  6.27  1.83     5.25     7.28
-#' # 2 cyl      Group 2    17  6.12  1.80     5.19     7.04
+#' # A tibble: 6 × 7
+#' # variable level group       n  prop ci_lower ci_upper
+#' # <chr>    <fct> <chr>   <int> <dbl>    <dbl>    <dbl>
+#' # 1 cyl      4     Group 1     3  27.3    0.954     53.6
+#' # 2 cyl      4     Group 2     8  72.7   46.4       99.0
+#' # 3 cyl      6     Group 1     4  57.1   20.5       93.8
+#' # 4 cyl      6     Group 2     3  42.9    6.20      79.5
+#' # 5 cyl      8     Group 1     5  35.7   10.6       60.8
+#' # 6 cyl      8     Group 2     9  64.3   39.2       89.4
 
 get_descriptives <- function(df, outcome_variable, grouping_variable) {
   
@@ -146,6 +150,8 @@ get_descriptives <- function(df, outcome_variable, grouping_variable) {
       }
     )
   )
+  
+  if(! "level" %in% names(tab)) tab <- tab %>% dplyr::mutate(level = NA) %>% dplyr::relocate(level, .after = variable)
   
   return(tab %>% as_tibble)
   
