@@ -86,15 +86,13 @@
 #' # 1 cyl      Group 1    15  6.27  1.83     5.25     7.28
 #' # 2 cyl      Group 2    17  6.12  1.80     5.19     7.04
 
-
 get_descriptives <- function(df, outcome_variable, grouping_variable) {
   
-  # Convert to string
+  # Convert arguments to strings
   outcome_variable <- df %>%
     dplyr::select({{outcome_variable}}) %>%
     names
   
-  # Convert to string
   grouping_variable <- df %>%
     dplyr::select({{grouping_variable}}) %>%
     names
@@ -105,7 +103,7 @@ get_descriptives <- function(df, outcome_variable, grouping_variable) {
       X = outcome_variable,
       FUN = function(y) {
         
-        # If outcome_variable non-numeric
+        # If outcome_variable is non-numeric
         if(df %>% dplyr::select(tidyselect::all_of(y)) %>% unlist %>% class %in% c("character", "factor")) {
           
           # Get counts, props and CIs
@@ -125,7 +123,7 @@ get_descriptives <- function(df, outcome_variable, grouping_variable) {
           
           return(tab)
         
-        # Else, if outcome_variable numeric
+        # Else, if outcome_variable is numeric
         } else {
           
           # Get means, SDs and CIs
