@@ -43,7 +43,6 @@
 #' Returns a bar plot.
 #'
 #' @examples
-#' # example code
 #'
 #' # Render bar plot of means for multiple numeric vectors
 #' # get_descriptives(
