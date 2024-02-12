@@ -91,7 +91,11 @@
 #' # 5 cyl      8     Group 1     5  35.7   10.6       60.8
 #' # 6 cyl      8     Group 2     9  64.3   39.2       89.4
 
-get_descriptives <- function(df, outcome_variable, grouping_variable) {
+get_descriptives <- function(
+    df,
+    outcome_variable,
+    grouping_variable
+) {
 
   # Convert arguments to strings
   outcome_variable <- df %>%
