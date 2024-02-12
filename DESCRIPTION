@@ -1,0 +1,38 @@
+Package: anyhoodle
+Title: Utility functions for computing descriptive stats and rendering bar
+    plots
+Version: 0.1
+Authors@R: c(
+    person("Joel", "Barnes", , "joel.barnes@barnzilla.ca", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-7621-9020")),
+    person("Michelle", "Guerrero", , "michelle@tidydata.ca", role = "aut",
+           comment = c(ORCID = "0000-0001-8169-5040"))
+  )
+Author: Joel Barnes <joel.barnes@barnzilla.ca> [aut, cre], Michelle
+    Guerrero <michelle@tidydata.ca> [aut]
+Maintainer: Joel Barnes <joel.barnes@barnzilla.ca>
+Description: This package provides Utility functions for computing
+    descriptive stats and rendering bar plots.
+License: GPL (>= 3)
+URL: https://gitlab.k8s.cloud.statcan.ca/had/chms
+BugReports: https://gitlab.k8s.cloud.statcan.ca/had/chms/-/issues
+Depends: 
+    R (>= 3.50)
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+Language: en
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    dplyr,
+    ggplot2,
+    ggtext,
+    magrittr,
+    stats,
+    stringr,
+    tidyselect,
+    viridis
+Suggests: 
+    knitr,
+    rmarkdown
