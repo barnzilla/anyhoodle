@@ -1,7 +1,20 @@
+---
+title: ""
+format: gfm
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = "100%",
+  eval = FALSE
+)
+```
 
 ## Install anyhoodle R package
 
-``` r
+```{r, eval = FALSE, `code-line-number` = 1}
 devtools::install_git(
   url = "https://github.com/barnzilla/anyhoodle.git",
   force = TRUE
@@ -10,13 +23,13 @@ devtools::install_git(
 
 ## Import dependencies
 
-``` r
+```{r, warning = FALSE, `code-line-number` = 1}
 library(anyhoodle)
 ```
 
 ## Get descriptive stats and render bar plots
 
-``` r
+```{r, `code-line-number` = 1}
 # Render bar plot of means for multiple numeric vectors
 get_descriptives(
   df = mtcars,
