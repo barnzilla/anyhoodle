@@ -279,7 +279,7 @@ render_bar_plot <- function(
     ) +
     ggplot2::theme_minimal() +
     ggplot2::theme(
-      text = ggplot2::element_text(family = options$plot_font_face),
+      text = ggplot2::element_text(family = plot_font_face),
       plot.title = ggplot2::element_text(size = plot_title_font_size, margin = ggplot2::margin(0, 0, plot_title_font_size * 2, 0)),
       axis.title.x = ggplot2::element_text(color = label_color, margin = ggplot2::margin(0, axis_text_font_size * 1.25, 0)),
       axis.title.y = ggplot2::element_text(size = axis_text_font_size, color = label_color, margin = ggplot2::margin(0, axis_text_font_size * 0.75, 0)),
