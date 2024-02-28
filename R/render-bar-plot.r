@@ -186,6 +186,13 @@ render_bar_plot <- function(
     x_variable <- fill_variable <- "level"
     legend_position <- "none"
 
+  } else if(levels > 1 & variables == 1 & grouping_variables > 0) {
+    
+    denominator <- levels
+    x_variable <- "level"
+    fill_variable <- grouping_variable
+    legend_position <- "none"
+    
   } else if(levels > 1 & variables > 1 & grouping_variables == 0) {
 
     denominator <- levels
