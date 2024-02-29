@@ -163,38 +163,50 @@ render_bar_plot <- function(
     length
 
   # Select which variables are passed to ggplot2's mapping
-  if(levels < 2 & grouping_variables == 0) {
+  if(levels < 2) {
 
-    denominator <- variables
-    x_variable <- fill_variable <- "variable"
+    if(grouping_variables > 0) {
 
-  } else if(levels < 2 & grouping_variables > 0) {
+      denominator <- df %>% dplyr::select(!! grouping_variable) %>%
+        stats::na.omit() %>%
+        unique %>%
+        unlist %>%
+        unname %>%
+        length
+      x_variable <- "variable"
+      fill_variable <- grouping_variable
 
-    denominator <- df %>% dplyr::select(!! grouping_variable) %>%
-      stats::na.omit() %>%
-      unique %>%
-      unlist %>%
-      unname %>%
-      length
-    x_variable <- "variable"
-    fill_variable <- grouping_variable
+    } else {
 
-  } else if(levels > 1 & variables == 1 & grouping_variables == 0) {
+      denominator <- variables
+      x_variable <- fill_variable <- "variable"
 
-    denominator <- levels
-    x_variable <- fill_variable <- "level"
+    }
 
-  } else if(levels > 1 & variables == 1 & grouping_variables > 0) {
+  } else {
 
-    denominator <- max(levels, length(levels(df[[grouping_variable]])))
-    x_variable <- "level"
-    fill_variable <- grouping_variable
+    if(variables > 1) {
 
-  } else if(levels > 1 & variables > 1 & grouping_variables == 0) {
+      denominator <- levels
+      x_variable <- "variable"
+      fill_variable <- "level"
 
-    denominator <- levels
-    x_variable <- "variable"
-    fill_variable <- "level"
+    } else {
+
+      if(grouping_variables > 0) {
+
+        denominator <- max(levels, length(levels(df[[grouping_variable]])))
+        x_variable <- "level"
+        fill_variable <- grouping_variable
+
+      } else {
+
+        denominator <- levels
+        x_variable <- fill_variable <- "level"
+
+      }
+
+    }
 
   }
 
