@@ -185,11 +185,11 @@ render_bar_plot <- function(
     x_variable <- fill_variable <- "level"
 
   } else if(levels > 1 & variables == 1 & grouping_variables > 0) {
-    
-    denominator <- levels
+
+    denominator <- max(levels, length(levels(df[[grouping_variable]])))
     x_variable <- "level"
     fill_variable <- grouping_variable
-    
+
   } else if(levels > 1 & variables > 1 & grouping_variables == 0) {
 
     denominator <- levels
