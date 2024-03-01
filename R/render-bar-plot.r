@@ -9,7 +9,6 @@
 #' @importFrom ggtext element_markdown
 #' @importFrom magrittr %>%
 #' @importFrom stats na.omit
-#' @importFrom stringr str_wrap
 #' @importFrom viridis viridis
 #'
 #' @param df Required: a data frame returned from [anyhoodle::get_descriptives()].
@@ -146,11 +145,18 @@ render_bar_plot <- function(
   df <- df %>%
     dplyr::mutate(
       dplyr::across(
-        .cols = dplyr::intersect(names(.), c("variable", "level")),
-        .fns = ~ stringr::str_wrap(
-          string = .x,
-          width = item_option_wrap_size
-        )
+        .cols = df %>% dplyr::select_if(is.character) %>% names,
+        .fns = ~ {
+          gsub(
+            pattern = "\\s+$",
+            replace = "",
+            x = gsub(
+              pattern = paste0("(.{", label_wrap_size, "})"),
+              replacement = "\\1\n",
+              x = .x
+            )
+          )
+        }
       )
     )
 
@@ -166,21 +172,6 @@ render_bar_plot <- function(
     dplyr::select(-level, -n) %>%
     names %>%
     length
-
-  if(levels > 0) {
-
-    # Wrap vector names if too long
-    df$level <- gsub(
-      pattern = "\\s+$",
-      replace = "",
-      x = gsub(
-        pattern = paste0("(.{", label_wrap_size, "})"),
-        replacement = "\\1\n",
-        x = df$level
-      )
-    )
-
-  }
 
   # Select which variables are passed to ggplot2's mapping
   if(levels < 2) {
