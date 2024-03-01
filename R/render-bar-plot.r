@@ -232,34 +232,30 @@ render_bar_plot <- function(
 
   }
 
+  if(isTRUE(show_n)) {
+
+    labels <- paste0(
+      "\n(",
+      trimws(
+        format(
+          x = df$n,
+          big.mark = ","
+        )
+      ),
+      ")"
+    )
+
+  } else {
+
+    labels <- rep("", nrow(df))
+
+  }
+
   # Set mapping content
   mapping_content <- aes(
     x = !! dplyr::sym(x_variable),
     y = mean,
-    fill = !! dplyr::sym(fill_variable),
-    label = paste0(
-      format(
-        x = mean,
-        nsmall = decimals
-      ),
-      ifelse(
-        test = isTRUE(is_prop),
-        yes = paste0("%"),
-        no = paste0("")
-      ),
-      ifelse(
-        test = isTRUE(show_n),
-        yes = paste0(
-          "\n(",
-          format(
-            x = n,
-            big.mark = ","
-          ),
-          ")"
-        ),
-        no = paste0("")
-      )
-    )
+    fill = !! dplyr::sym(fill_variable)
   )
 
   # Render bar plot
@@ -275,7 +271,19 @@ render_bar_plot <- function(
     ) +
     ggplot2::geom_text(
       position = ggplot2::position_dodge(width = 0.9),
-      aes(
+      ggplot2::aes(
+        label = paste0(
+          format(
+            x = df$mean,
+            nsmall = decimals
+          ),
+          ifelse(
+            test = isTRUE(is_prop),
+            yes = paste0("%"),
+            no = paste0("")
+          ),
+          labels
+        ),
         vjust = data_label_position,
         y = ci_upper
       ),
