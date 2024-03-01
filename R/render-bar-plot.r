@@ -103,7 +103,7 @@ render_bar_plot <- function(
     label_color = "#434343",
     item_option_wrap_size = 18,
     error_bar_size = 0.05,
-    data_label_position = 2,
+    data_label_position = 0.5,
     decimals = 1,
     show_n = FALSE
 ) {
