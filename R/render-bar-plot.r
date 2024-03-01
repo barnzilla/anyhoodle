@@ -174,7 +174,7 @@ render_bar_plot <- function(
       pattern = "\\s+$",
       replace = "",
       x = gsub(
-        pattern = "(.{20})",
+        pattern = paste0("(.{", label_wrap_size, "})"),
         replacement = "\\1\n",
         x = df$level
       )
