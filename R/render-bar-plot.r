@@ -167,6 +167,16 @@ render_bar_plot <- function(
     names %>%
     length
 
+  if(levels > 0) {
+
+    # Wrap vector names if too long
+    df$level <- stringr::str_wrap(
+      string = df$level,
+      width = label_wrap_size
+    )
+
+  }
+
   # Select which variables are passed to ggplot2's mapping
   if(levels < 2) {
 
