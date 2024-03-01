@@ -170,9 +170,14 @@ render_bar_plot <- function(
   if(levels > 0) {
 
     # Wrap vector names if too long
-    df$level <- stringr::str_wrap(
-      string = df$level,
-      width = label_wrap_size
+    df$level <- gsub(
+      pattern = "\\s+$",
+      replace = "",
+      x = gsub(
+        pattern = "(.{20})",
+        replacement = "\\1\n",
+        x = df$level
+      )
     )
 
   }
