@@ -145,7 +145,7 @@ render_bar_plot <- function(
   df <- df %>%
     dplyr::mutate(
       dplyr::across(
-        .cols = df %>% dplyr::select_if(is.character) %>% names,
+        .cols = c(df %>% dplyr::select_if(is.character) %>% names, df %>% dplyr::select_if(is.factor) %>% names),
         .fns = ~ {
           gsub(
             pattern = "\\s+$",
@@ -293,7 +293,7 @@ render_bar_plot <- function(
       ggplot2::aes(
         label = paste0(
           format(
-            x = df$mean,
+            x = mean,
             nsmall = decimals
           ),
           ifelse(
