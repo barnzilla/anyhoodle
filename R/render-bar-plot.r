@@ -121,12 +121,15 @@ render_bar_plot <- function(
 
     is_prop <- TRUE
     df <- df %>% dplyr::rename(mean = prop)
+    max_y_value <- as.integer(max(df$mean) + 20)
 
   } else {
 
     is_prop <- FALSE
 
     if(x_axis_label != "") x_axis_text <- element_blank()
+    max_y_value <- max(df$mean) + min(df$sd)
+    max_y_value <- as.integer(max(df$mean) + max(df$mean) * 0.2)
 
   }
 
@@ -297,6 +300,7 @@ render_bar_plot <- function(
       width = error_bar_size,
       position = ggplot2::position_dodge(width = 0.9)
     ) +
+    ggplot2::scale_y_continuous(limits = c(0, max_y_value)) +
     ggplot2::scale_fill_manual(values = fill_colors) +
     ggplot2::labs(
       title = plot_title,
