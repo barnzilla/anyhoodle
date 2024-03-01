@@ -126,6 +126,8 @@ render_bar_plot <- function(
 
     is_prop <- FALSE
 
+    if(x_axis_label != "") x_axis_text <- element_blank()
+
   }
 
   # Round mean vector to one decimal
