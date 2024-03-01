@@ -216,13 +216,21 @@ render_bar_plot <- function(
   }
 
   # Select the number of colors needed
-  fill_colors <- color_palette[
-    seq(
-      from = 1,
-      to = length(color_palette),
-      by = floor(length(color_palette) / denominator)
-    )[1:denominator]
-  ]
+  if(isTRUE(all.equal(color_palette, viridis::viridis(15)))) {
+
+    fill_colors <- color_palette[
+      seq(
+        from = 1,
+        to = length(color_palette),
+        by = floor(length(color_palette) / denominator)
+      )[1:denominator]
+    ]
+
+  } else {
+
+    fill_colors <- color_palette
+
+  }
 
   if(grouping_variables > 0) {
 
