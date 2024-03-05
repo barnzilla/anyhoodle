@@ -106,7 +106,7 @@ render_bar_plot <- function(
     decimals = 1,
     show_n = FALSE
 ) {
-  
+
   # Check whether optional arguments are set and update arguments based on user selections
   if(is.numeric(plot_width) & is.numeric(plot_height)) options(repr.plot.width = plot_width, repr.plot.height = plot_height)
   if(isTRUE(show_grid_lines)) show_grid_lines <- element_line() else show_grid_lines <- element_blank()
@@ -114,24 +114,30 @@ render_bar_plot <- function(
   if(isFALSE(show_x_axis)) x_axis_text <- element_blank() else x_axis_text <- element_text(color = label_color, size = axis_text_font_size)
   if(isFALSE(show_y_axis)) y_axis_text <- element_blank() else y_axis_text <- element_text(color = label_color, size = axis_text_font_size)
   if(is.numeric(data_label_position)) data_label_position <- data_label_position * -1
-  
+
   # If prop vector exists, rename as "mean"
   if("prop" %in% names(df)) {
-    
+
     is_prop <- TRUE
     df <- df %>% dplyr::rename(mean = prop)
     max_y_value <- as.integer(max(df$mean) + 20)
-    
+
   } else {
-    
+
     is_prop <- FALSE
-    
+
     if(x_axis_label != "") x_axis_text <- element_blank()
     max_y_value <- max(df$mean) + min(df$sd)
     max_y_value <- as.integer(max(df$mean) + max(df$mean) * 0.2)
-    
+
   }
-  
+
+  # Find any factors in the data frame and keep track of levels
+  df_structure <- lapply(
+    X = df,
+    FUN = function(x) if(class(x) == "factor") levels(x)
+  )
+
   # Round mean vector to one decimal
   df <- df %>%
     dplyr::mutate(
@@ -140,18 +146,7 @@ render_bar_plot <- function(
         .fns = ~ round(.x, decimals)
       )
     )
-  
-  # If level is a factor, remember level order
-  if("factor" %in% class(df$level)) {
-    
-    level_order <- levels(df$level)
-    
-  } else {
-    
-    level_order <- NULL
-    
-  }
-  
+
   # Wrap vector names if too long
   df <- df %>%
     dplyr::mutate(
@@ -170,10 +165,21 @@ render_bar_plot <- function(
         }
       )
     )
-  
+
   # Re-establish level order if level vector was originally a factor
-  if(! is.null(level_order)) df <- df %>% mutate(level = factor(x = level, levels = level_order))
-  
+  for(i in 1:ncol(df)) {
+
+    if(! is.null(df_structure[[i]])) {
+
+      df[[i]] <- factor(
+        x = df[[i]],
+        levels = df_structure[[i]]
+      )
+
+    }
+
+  }
+
   # Define required variables for plotting
   variables <- length(unique(stats::na.omit(df$variable)))
   levels <- length(unique(stats::na.omit(df$level)))
@@ -186,12 +192,12 @@ render_bar_plot <- function(
     dplyr::select(-level, -n) %>%
     names %>%
     length
-  
+
   # Select which variables are passed to ggplot2's mapping
   if(levels < 2) {
-    
+
     if(grouping_variables > 0) {
-      
+
       denominator <- df %>% dplyr::select(!! grouping_variable) %>%
         stats::na.omit() %>%
         unique %>%
@@ -200,44 +206,44 @@ render_bar_plot <- function(
         length
       x_variable <- "variable"
       fill_variable <- grouping_variable
-      
+
     } else {
-      
+
       denominator <- variables
       x_variable <- fill_variable <- "variable"
-      
+
     }
-    
+
   } else {
-    
+
     if(variables > 1) {
-      
+
       denominator <- levels
       x_variable <- "variable"
       fill_variable <- "level"
-      
+
     } else {
-      
+
       if(grouping_variables > 0) {
-        
+
         denominator <- max(levels, length(levels(df[[grouping_variable]])))
         x_variable <- "level"
         fill_variable <- grouping_variable
-        
+
       } else {
-        
+
         denominator <- levels
         x_variable <- fill_variable <- "level"
-        
+
       }
-      
+
     }
-    
+
   }
-  
+
   # Select the number of colors needed
   if(isTRUE(all.equal(color_palette, viridis::viridis(15)))) {
-    
+
     fill_colors <- color_palette[
       seq(
         from = 1,
@@ -245,15 +251,15 @@ render_bar_plot <- function(
         by = floor(length(color_palette) / denominator)
       )[1:denominator]
     ]
-    
+
   } else {
-    
+
     fill_colors <- color_palette
-    
+
   }
-  
+
   if(grouping_variables > 0) {
-    
+
     # Ensure grouping variables are factors
     df <- df %>%
       dplyr::mutate(
@@ -262,11 +268,11 @@ render_bar_plot <- function(
           .fns = ~ factor(.x)
         )
       )
-    
+
   }
-  
+
   if(isTRUE(show_n)) {
-    
+
     labels <- paste0(
       "\n(",
       trimws(
@@ -277,20 +283,20 @@ render_bar_plot <- function(
       ),
       ")"
     )
-    
+
   } else {
-    
+
     labels <- rep("", nrow(df))
-    
+
   }
-  
+
   # Set mapping content
   mapping_content <- aes(
     x = !! dplyr::sym(x_variable),
     y = mean,
     fill = !! dplyr::sym(fill_variable)
   )
-  
+
   # Render bar plot
   ggplot2::ggplot(
     data = df,
@@ -352,5 +358,5 @@ render_bar_plot <- function(
       panel.grid.minor = show_grid_lines,
       axis.line = show_axis_lines
     )
-  
+
 }
