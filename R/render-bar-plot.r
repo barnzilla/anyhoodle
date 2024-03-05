@@ -149,25 +149,20 @@ render_bar_plot <- function(
     )
 
   # Wrap vector names if too long
-  df <- df %>%
-    dplyr::mutate(
-      dplyr::across(
-        .cols = c(df %>% dplyr::select_if(is.character) %>% names, df %>% dplyr::select_if(is.factor) %>% names),
-        .fns = ~ stringr::str_wrap(
-          string = .x,
-          width = label_wrap_size
-        )
-      )
-    )
-
-  # Re-establish level order if level vector was originally a factor
   for(i in 1:ncol(df)) {
 
-    if(! is.null(df_structure[[i]])) {
+    if(class(df[[i]]) == "factor") {
 
-      df[[i]] <- factor(
-        x = df[[i]],
-        levels = df_structure[[i]]
+      levels(df[[i]]) <- stringr::str_wrap(
+        string = levels(df[[i]]),
+        width = label_wrap_size
+      )
+
+    } else if(class(df[[i]]) == "character") {
+
+      df[[i]] <- stringr::str_wrap(
+        string = df[[i]],
+        width = label_wrap_size
       )
 
     }
