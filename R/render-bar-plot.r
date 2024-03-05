@@ -9,6 +9,7 @@
 #' @importFrom ggtext element_markdown
 #' @importFrom magrittr %>%
 #' @importFrom stats na.omit
+#' @importFrom stringr str_wrap
 #' @importFrom viridis viridis
 #'
 #' @param df Required: a data frame returned from [anyhoodle::get_descriptives()].
@@ -152,17 +153,10 @@ render_bar_plot <- function(
     dplyr::mutate(
       dplyr::across(
         .cols = c(df %>% dplyr::select_if(is.character) %>% names, df %>% dplyr::select_if(is.factor) %>% names),
-        .fns = ~ {
-          gsub(
-            pattern = "\\s+$",
-            replace = "",
-            x = gsub(
-              pattern = paste0("(.{", label_wrap_size, "})"),
-              replacement = "\\1\n",
-              x = .x
-            )
-          )
-        }
+        .fns = ~ stringr::str_wrap(
+          string = .x,
+          width = label_wrap_size
+        )
       )
     )
 
